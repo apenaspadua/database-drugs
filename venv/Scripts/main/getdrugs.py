@@ -24,16 +24,21 @@ def main():
 
     array_alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
                       'u', 'v', 'w', 'x', 'y', 'z']
+    limit = 0
     search_field = chrome.find_element_by_xpath("//input[@id='MDICtextbox']")
 
     for alph in array_alphabet:
+
         search_field.send_keys(alph)
         search_medicine_suggention = WebDriverWait(chrome, 10).until(EC.visibility_of_all_elements_located((
             By.XPATH, "//div[@id='MDICildruglist']//ul[@id='MDICdrugs']//li//a"
         )))
         for item in search_medicine_suggention:
-            # print('Name: ' + item.text)
+            limit += 1
             postToDatabase(item.text, alph)
+            if limit == 30:
+                limit = 0
+                break
 
         search_field.clear()
 
